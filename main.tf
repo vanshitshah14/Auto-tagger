@@ -8,19 +8,26 @@ data "google_project" "project" {
 
 
 
-
 #enable iam api
 resource "google_project_service" "iam_api_enable" {
   service = "iam.googleapis.com"
   disable_on_destroy = false
 }
+resource "time_sleep" "wait5seconds" {
+  create_duration = "5s"
+  depends_on = [google_project_service.iam_api_enable]
+}
 
   
 
 #enable pubsub api
-resource "google_project_service" "pubsub_api_enable" {
+resource "google_project_service" "pubsub_api" {
   service = "pubsub.googleapis.com"
   disable_on_destroy = false
+}
+resource "time_sleep" "waitseconds" {
+  create_duration = "5s"
+  depends_on = [google_project_service.pubsub_api]
 }
 
 
@@ -30,6 +37,10 @@ resource "google_project_service" "sql_api_enable" {
   disable_on_destroy = false
 }
 
+resource "time_sleep" "wait5_seconds" {
+  create_duration = "5s"
+  depends_on = [google_project_service.sql_api_enable]
+}
 
 
 
@@ -54,7 +65,7 @@ resource "google_project_service" "eventarc_api_enable" {
 }
 
 resource "time_sleep" "wait_5_seconds_2" {
-  create_duration = "15s"
+  create_duration = "80s"
   depends_on = [google_project_service.eventarc_api_enable]
 }
 
@@ -402,6 +413,9 @@ resource "google_pubsub_topic" "autotagger_table" {
     creator=var.creator
     org=var.org
   }
+  depends_on = [
+    google_project_service.pubsub_api
+  ]
 }
 
 resource "google_pubsub_subscription" "autotagger_table_push" {
