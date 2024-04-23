@@ -25,7 +25,7 @@ git clone https://github.com/vanshitshah14/Auto-tagger.git
 
 ### 4. change directory to Auto-tagger/
 ```
-cd auto-tagger/
+cd Auto-tagger/
 ```
 
 ### 5. update all the variables related to project name and region in the var.tf file
